@@ -1,36 +1,70 @@
-<div v-if="filteredPeople.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Person Finder</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white min-h-screen">
+
+<div id="app" class="container mx-auto px-4 py-8">
+    
+    <div class="text-center mb-10">
+        <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+            AI Person Finder
+        </h1>
+    </div>
+
+    <div class="max-w-xl mx-auto mb-12">
+        <input 
+            type="text" 
+            v-model="searchQuery" 
+            placeholder="İsim veya millet ile ara..." 
+            class="w-full px-6 py-4 bg-slate-800 border border-slate-700 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-lg text-white"
+        >
+    </div>
+
+    <div v-if="filteredPeople.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <div v-for="person in filteredPeople" :key="person.id" 
-             class="group bg-slate-800 rounded-3xl overflow-hidden border border-slate-700 transition-all duration-300 shadow-xl">
+             class="bg-slate-800 rounded-3xl overflow-hidden border border-slate-700 shadow-2xl">
             
-            <div class="relative aspect-[3/4] overflow-hidden">
-                <img :src="person.image" class="w-full h-full object-cover">
-                <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-white">
+            <div class="relative aspect-[3/4]">
+                <img :src="person.image" class="w-full h-full object-cover object-top">
+                <div class="absolute top-2 right-2 bg-black/50 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-bold">
                     AI GENERATED
                 </div>
             </div>
 
             <div class="p-5">
-                <h3 class="text-2xl font-bold mb-2">{{ person.name }} {{ person.surname }}</h3>
+                <h3 class="text-xl font-bold mb-3">{{ person.name }} {{ person.surname }}</h3>
                 
-                <div class="space-y-2 text-sm text-slate-300">
-                    <div class="flex items-center gap-2">
-                        <span class="text-slate-500 w-16">Millet:</span>
-                        <span class="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded">{{ person.nation }}</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-slate-500 w-16">Yaş:</span>
-                        <span class="text-white font-medium">{{ person.age }}</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-slate-500 w-16">Telefon:</span>
+                <div class="space-y-2 text-sm">
+                    <p class="flex justify-between">
+                        <span class="text-slate-500">Millet:</span>
+                        <span class="text-blue-400 font-semibold">{{ person.nation }}</span>
+                    </p>
+                    <p class="flex justify-between">
+                        <span class="text-slate-500">Yaş:</span>
+                        <span class="text-white">{{ person.age }}</span>
+                    </p>
+                    <p class="flex justify-between">
+                        <span class="text-slate-500">Telefon:</span>
                         <span class="text-emerald-400 font-mono">{{ person.phone }}</span>
-                    </div>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
+    <div v-else class="text-center text-slate-500 mt-20">
+        Kriterlere uygun kimse bulunamadı.
+    </div>
+</div>
+
 <script>
+    // Vue Uygulamasını Başlatıyoruz
     const { createApp } = Vue
 
     createApp({
@@ -42,10 +76,10 @@
                         id: 1, 
                         name: 'Lucas', 
                         surname: 'Müller', 
-                        nation: 'German🇩🇪', 
+                        nation: 'German', 
                         age: 15, 
-                        phone: '+49 152 456 78', 
-                        image: '1776969952745.jpg' // GitHub'daki klasör yolun
+                        phone: '+49 152 456', 
+                        image: '1776969952745.jpg' 
                     },
                     { 
                         id: 2, 
@@ -53,22 +87,24 @@
                         surname: 'Aydın', 
                         nation: 'Türk', 
                         age: 24, 
-                        phone: '+90 532 123 45', 
+                        phone: '+90 532 123', 
                         image: 'pictures/zeynep.jpg' 
                     }
-                    // Diğer kişileri de bu formatta ekleyebilirsin
                 ]
             }
         },
         computed: {
             filteredPeople() {
-                const query = this.searchQuery.toLowerCase().trim();
+                const q = this.searchQuery.toLowerCase().trim();
                 return this.people.filter(p => {
-                    return p.name.toLowerCase().includes(query) || 
-                           p.surname.toLowerCase().includes(query) ||
-                           p.nation.toLowerCase().includes(query);
+                    return p.name.toLowerCase().includes(q) || 
+                           p.surname.toLowerCase().includes(q) ||
+                           p.nation.toLowerCase().includes(q);
                 });
             }
         }
     }).mount('#app')
 </script>
+
+</body>
+</html>
